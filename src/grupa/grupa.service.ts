@@ -28,7 +28,11 @@ export class GrupaService {
   public async findAll(): Promise<Grupa[]> {
     return await this.grupaRepository.find();
   }
-  
+
+  public async insertChild(groupId: number, childId: number){
+    await this.dijeteService.assignGroup(childId, groupId);
+  }
+
   public async findByName(groupName: string){
     return await this.grupaRepository.find({where: {naziv: groupName} });
   }
