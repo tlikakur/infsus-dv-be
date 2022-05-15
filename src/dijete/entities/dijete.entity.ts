@@ -1,4 +1,5 @@
-import {Column, Entity, Index, PrimaryGeneratedColumn} from "typeorm";
+import { Grupa } from "../../grupa/entities/grupa.entity";
+import {Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
 
 
 @Index("dijete_pkey", ["iddijete"], { unique: true })
@@ -19,9 +20,9 @@ export class Dijete {
   @Column("date", { name: "datumrodenja" })
   datumrodenja: string;
 
-  // @ManyToOne(() => Grupa, (grupa) => grupa.dijetes)
-  // @JoinColumn([{ name: "idgrupa", referencedColumnName: "idgrupa" }])
-  // idgrupa: Grupa;
+  @ManyToOne(() => Grupa, (grupa) => grupa.djeca)
+  @JoinColumn([{ name: "idgrupa", referencedColumnName: "idgrupa" }])
+  idgrupa: Grupa;
 
   // @ManyToMany(() => Bolest, (bolest) => bolest.dijetes)
   // bolests: Bolest[];

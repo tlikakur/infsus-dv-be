@@ -27,11 +27,11 @@ export class Grupa {
   naziv: string;
 
   @OneToMany(() => Dijete, (dijete) => dijete.idgrupa)
-  dijetes: Dijete[];
+  djeca: Dijete[];
 
-  @ManyToOne(() => Odgajatelj, (odgajatelj) => odgajatelj.grupas)
-  @JoinColumn([{ name: "idodgajatelj", referencedColumnName: "idodgajatelj" }])
-  idodgajatelj: Odgajatelj;
+  // @ManyToOne(() => Odgajatelj, (odgajatelj) => odgajatelj.grupe)
+  // @JoinColumn([{ name: "idodgajatelj", referencedColumnName: "idodgajatelj" }])
+  // idodgajatelj: Odgajatelj;
 
   @ManyToMany(() => Izlet, (izlet) => izlet.grupas)
   @JoinTable({

@@ -1,6 +1,7 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateGrupaDto } from './createGrupa.dto';
-import { IsString, IsNumber, IsOptional, MaxLength, MinLength } from 'class-validator';
+import { IsString, IsNumber, IsOptional, MaxLength, MinLength, IsDate } from 'class-validator';
+import { Dijete } from 'src/dijete/entities/dijete.entity';
 
 export class UpdateGrupaDto extends PartialType(CreateGrupaDto) {
   
@@ -10,9 +11,11 @@ export class UpdateGrupaDto extends PartialType(CreateGrupaDto) {
   name!: string;
 
   @IsNumber({}, { message: 'ID odgajatelja mora biti brojčana vrijednost' })
-  odgajateljId!: number;
+  odgajatelj?: number; 
 
+  @IsDate({message: 'Datum osnivanja mora biti u formatu YYYY-MM-DD'})
+  datumosnivanja!: string;
+  
   @IsOptional()
-  @IsNumber({}, { each: true })
-  children: number[];
+  iddjeca: Dijete[];
 }

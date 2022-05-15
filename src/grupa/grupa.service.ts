@@ -1,26 +1,36 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateGrupaDto } from './dto/createGrupa.dto';
 import { UpdateGrupaDto } from './dto/updateGrupa.dto';
+import { Grupa } from './entities/grupa.entity';
 
 @Injectable()
 export class GrupaService {
-  create(grupa: CreateGrupaDto) {
-    return 'Adds new group';
+
+  constructor(@InjectRepository(Grupa) private grupaRepository: Repository<Grupa>){}
+
+  public async create(grupa: CreateGrupaDto) {
+    await this.grupaRepository.insert(grupa);
   }
 
-  findAll() {
-    return `Returns list of groups`;
+  public async findAll(): Promise<Grupa[]> {
+    return await this.grupaRepository.find();
   }
 
-  findOne(id: number) {
-    return `Returns group #${id}`;
+  public async findOne(id: number): Promise<Grupa> {
+    return await this.grupaRepository.findOne({idgrupa: id});
   }
 
-  update(id: number, grupa: UpdateGrupaDto) {
-    return `Updates group #${id}`;
+  public async update(id: number, grupa: UpdateGrupaDto): Promise<number> {
+    await this.grupaRepository.update({idgrupa: id}, grupa);
+
+    return id;
   }
 
-  remove(id: number) {
-    return `Removes group #${id}`;
+  public async remove(id: number): Promise<number> {
+
+    await this.grupaRepository.delete({idgrupa: id});
+    return id;
   }
 }

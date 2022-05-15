@@ -3,10 +3,12 @@ import { DijeteService } from './dijete.service';
 import { DijeteController } from './dijete.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Dijete } from './entities/dijete.entity';
+import { Grupa } from '../grupa/entities/grupa.entity';
 
 @Module({
   controllers: [DijeteController],
-  providers: [DijeteService],
-  imports: [TypeOrmModule.forFeature([Dijete])],
+  providers: [DijeteService, Dijete],
+  imports: [TypeOrmModule.forFeature([Dijete]), Grupa],
+  exports: [Dijete]
 })
 export class DijeteModule {}

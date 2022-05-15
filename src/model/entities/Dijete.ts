@@ -33,19 +33,19 @@ export class Dijete {
   @Column("date", { name: "datumrodenja" })
   datumrodenja: string;
 
-  // @ManyToOne(() => Grupa, (grupa) => grupa.dijetes)
-  // @JoinColumn([{ name: "idgrupa", referencedColumnName: "idgrupa" }])
-  // idgrupa: Grupa;
+  @ManyToOne(() => Grupa, (grupa) => grupa.djeca)
+  @JoinColumn([{ name: "idgrupa", referencedColumnName: "idgrupa" }])
+  idgrupa: Grupa;
 
-  // @ManyToMany(() => Bolest, (bolest) => bolest.dijetes)
-  // bolests: Bolest[];
+  @ManyToMany(() => Bolest, (bolest) => bolest.dijetes)
+  bolests: Bolest[];
 
-  // @OneToOne(() => Dijeteziviu, (dijeteziviu) => dijeteziviu.iddijete2)
-  // dijeteziviu: Dijeteziviu;
+  @OneToOne(() => Dijeteziviu, (dijeteziviu) => dijeteziviu.iddijete2)
+  dijeteziviu: Dijeteziviu;
 
-  // @OneToMany(() => Izostanak, (izostanak) => izostanak.iddijete2)
-  // izostanaks: Izostanak[];
+  @OneToMany(() => Izostanak, (izostanak) => izostanak.iddijete2)
+  izostanaks: Izostanak[];
 
-  // @OneToMany(() => Placanje, (placanje) => placanje.iddijete)
-  // placanjes: Placanje[];
+  @OneToMany(() => Placanje, (placanje) => placanje.iddijete)
+  placanjes: Placanje[];
 }

@@ -6,7 +6,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Grupa } from "./Grupa";
+import { Grupa } from "../../grupa/entities/grupa.entity";
 import { Zaposlenik } from "./Zaposlenik";
 
 @Index("odgajatelj_pkey", ["idodgajatelj"], { unique: true })
@@ -15,8 +15,8 @@ export class Odgajatelj {
   @PrimaryGeneratedColumn({ type: "integer", name: "idodgajatelj" })
   idodgajatelj: number;
 
-  @OneToMany(() => Grupa, (grupa) => grupa.idodgajatelj)
-  grupas: Grupa[];
+  // @OneToMany(() => Grupa, (grupa) => grupa.idodgajatelj)
+  // grupe: Grupa[];
 
   @ManyToOne(() => Zaposlenik, (zaposlenik) => zaposlenik.odgajateljs, {
     onDelete: "CASCADE",
