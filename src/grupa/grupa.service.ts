@@ -6,10 +6,12 @@ import { Repository } from 'typeorm';
 import { CreateGrupaDto } from './dto/createGrupa.dto';
 import { UpdateGrupaDto } from './dto/updateGrupa.dto';
 import { Grupa } from './entities/grupa.entity';
-import { NotFoundError } from 'rxjs';
+import { GrupaSerializer } from './grupa.serializer';
 
 export interface IGrupaDetails {
-  grupa: Grupa,
+  id: number,
+  naziv: string,
+  datumOsnivanja: Date,
   djeca: Dijete[]
 }
 
@@ -46,16 +48,21 @@ export class GrupaService {
     try{ djeca = await this.dijeteService.findByGroup(id); }
     catch(err: unknown){ console.log(err); }
 
-    return { grupa: grupa, djeca: djeca }
+    return GrupaSerializer.serialize({ 
+      id: grupa.idgrupa,
+      naziv: grupa.naziv,
+      datumOsnivanja: grupa.datumosnivanja,
+      djeca: djeca 
+    });
   }
 
-  public async update(id: number, grupa: UpdateGrupaDto): Promise<number> {
-    await this.grupaRepository.update({idgrupa: id}, grupa);
-    return id;
+  public async update(groupId: number, grupa: UpdateGrupaDto): Promise<number> {
+    await this.grupaRepository.update({idgrupa: groupId}, grupa);
+    return GrupaSerializer.serialize({idgrupa: groupId});
   }
 
-  public async remove(id: number): Promise<number> {
-    await this.grupaRepository.delete({idgrupa: id});
-    return id;
+  public async remove(groupId: number): Promise<number> {
+    await this.grupaRepository.delete({idgrupa: groupId});
+    return GrupaSerializer.serialize({idgrupa: groupId});
   }
 }
