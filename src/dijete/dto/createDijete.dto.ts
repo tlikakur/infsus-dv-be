@@ -1,6 +1,22 @@
-import { IsDate, IsNumber, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
+import { 
+  IsDate, 
+  IsNotEmpty, 
+  IsNumber, 
+  IsOptional, 
+  IsString, 
+  Max, 
+  MaxLength, 
+  Min, 
+  MinLength 
+} from "class-validator";
 
 export class CreateDijeteDto {
+
+  @Max(99999999999, { message: 'OIB djeteta mora sadržavati točno 11 znakova'})
+  @Min(10000000000, { message: 'OIB djeteta mora sadržavati točno 11 znakova'})
+  @IsNumber({}, { message: 'OIB djeteta mora biti brojčana vrijednost'})
+  @IsNotEmpty({ message: 'OIB djeteta ne smije biti prazan'})
+  oib!: string;
 
   @IsDate({message: 'Datum rodenja mora biti u formatu YYYY-MM-DD'})
   datumRodenja!: Date;
