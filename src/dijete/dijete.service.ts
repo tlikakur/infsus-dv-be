@@ -43,7 +43,9 @@ export class DijeteService {
     return DijeteSerializer.serialize(child);
   }
 
-  public async assignGroup(childId: number, groupId: number){
+  public async assignGroup(childId: number, groupId: number): Promise<void>{
+
+    // TODO: Fix
     await this.dijeteRepository
       .query(`UPDATE Dijete SET idGrupa = ${groupId} WHERE idDijete = ${childId}`);
   }
