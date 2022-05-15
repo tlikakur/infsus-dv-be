@@ -24,9 +24,10 @@ export class GrupaService {
   ){}
 
   public async create(grupa: CreateGrupaDto) {
-
     const count = await this.grupaRepository.count({naziv: grupa.naziv});
-    if(count != 0) throw new ConflictException(`Grupa ${grupa.naziv} već postoji u sustavu`)
+    if(count != 0) 
+      throw new ConflictException(`Grupa ${grupa.naziv} već postoji u sustavu`)
+
     await this.grupaRepository.insert(grupa);
   }
 
@@ -36,6 +37,10 @@ export class GrupaService {
   }
 
   public async insertChild(groupId: number, childId: number){
+    const count = await this.grupaRepository.count({idgrupa: groupId});
+    if(count == 0) 
+      throw new ConflictException(`Grupa #${groupId} ne postoji sustavu`)
+
     await this.dijeteService.assignGroup(childId, groupId);
   }
 
@@ -44,9 +49,7 @@ export class GrupaService {
   }
 
   public async findOne(id: number): Promise<any> {
-  
     const group = await this.grupaRepository.findOne({idgrupa: id});
-
     if(!group) throw new NotFoundException(`Grupa #${id} ne postoji`);
 
     let djeca: Dijete[] = [];
@@ -61,11 +64,19 @@ export class GrupaService {
   }
 
   public async update(groupId: number, grupa: UpdateGrupaDto): Promise<number> {
+    const count = await this.grupaRepository.count({idgrupa: groupId});
+    if(count == 0) 
+      throw new ConflictException(`Grupa #${groupId} ne postoji sustavu`)
+
     await this.grupaRepository.update({idgrupa: groupId}, grupa);
     return GrupaSerializer.serialize({id: groupId});
   }
 
   public async remove(groupId: number): Promise<number> {
+    const count = await this.grupaRepository.count({idgrupa: groupId});
+    if(count == 0) 
+      throw new ConflictException(`Grupa #${groupId} ne postoji sustavu`)
+      
     await this.grupaRepository.delete({idgrupa: groupId});
     return GrupaSerializer.serialize({id: groupId});
   }
