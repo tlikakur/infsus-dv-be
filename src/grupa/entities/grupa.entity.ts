@@ -18,15 +18,15 @@ import { Izlet } from "../../model/entities/Izlet";
 @Entity("grupa", { schema: "public" })
 export class Grupa {
   @PrimaryGeneratedColumn({ type: "integer", name: "idgrupa" })
-  idgrupa: number;
+  idGrupa: number;
 
   @Column("date", { name: "datumosnivanja" })
-  datumosnivanja: string;
+  datumOsnivanja: string;
 
   @Column("character varying", { name: "naziv", unique: true, length: 50 })
   naziv: string;
 
-  @OneToMany(() => Dijete, (dijete) => dijete.idgrupa)
+  @OneToMany(() => Dijete, (dijete) => dijete.idGrupa)
   djeca: Dijete[];
 
   // @ManyToOne(() => Odgajatelj, (odgajatelj) => odgajatelj.grupe)

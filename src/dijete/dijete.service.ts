@@ -37,7 +37,7 @@ export class DijeteService {
   }
 
   public async findOne(id: number): Promise<Dijete> {
-    const child = await this.dijeteRepository.findOne({iddijete: id});
+    const child = await this.dijeteRepository.findOne({idDijete: id});
 
     if(!child) throw new NotFoundException(`Dijete #${id} ne postoji`);
     return DijeteSerializer.serialize(child);
@@ -51,12 +51,12 @@ export class DijeteService {
   }
 
   public async update(id: number, updateDijeteDto: UpdateDijeteDto): Promise<number> {
-    await this.dijeteRepository.update({iddijete: id}, updateDijeteDto);
+    await this.dijeteRepository.update({idDijete: id}, updateDijeteDto);
     return id;
   }
 
   public async remove(id: number): Promise<number> {
-    await this.dijeteRepository.delete({iddijete: id});
+    await this.dijeteRepository.delete({idDijete: id});
     return id;
   }
 }

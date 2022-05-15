@@ -12,7 +12,7 @@ export interface IGrupaDetails {
   id: number,
   naziv: string,
   datumOsnivanja: Date,
-  djeca: Dijete[]
+  djeca?: Dijete[]
 }
 
 @Injectable()
@@ -28,7 +28,8 @@ export class GrupaService {
   }
 
   public async findAll(): Promise<Grupa[]> {
-    return await this.grupaRepository.find();
+    const groups = await this.grupaRepository.find();
+    return GrupaSerializer.serialize(groups);
   }
 
   public async insertChild(groupId: number, childId: number){
@@ -40,29 +41,28 @@ export class GrupaService {
   }
 
   public async findOne(id: number): Promise<IGrupaDetails> {
-    const grupa = await this.grupaRepository.findOne({idgrupa: id});
+    const grupa = await this.grupaRepository.findOne({idGrupa: id});
 
     if(!grupa) throw new NotFoundException(`Grupa #${id} ne postoji`);
 
-    let djeca: Dijete[] = [];
-    try{ djeca = await this.dijeteService.findByGroup(id); }
+    try{ grupa.djeca = await this.dijeteService.findByGroup(id); }
     catch(err: unknown){ console.log(err); }
 
     return GrupaSerializer.serialize({ 
-      id: grupa.idgrupa,
+      id: grupa.idGrupa,
       naziv: grupa.naziv,
-      datumOsnivanja: grupa.datumosnivanja,
-      djeca: djeca 
+      datumOsnivanja: grupa.datumOsnivanja,
+      djeca: grupa.djeca 
     });
   }
 
   public async update(groupId: number, grupa: UpdateGrupaDto): Promise<number> {
-    await this.grupaRepository.update({idgrupa: groupId}, grupa);
-    return GrupaSerializer.serialize({idgrupa: groupId});
+    await this.grupaRepository.update({idGrupa: groupId}, grupa);
+    return GrupaSerializer.serialize({id: groupId});
   }
 
   public async remove(groupId: number): Promise<number> {
-    await this.grupaRepository.delete({idgrupa: groupId});
-    return GrupaSerializer.serialize({idgrupa: groupId});
+    await this.grupaRepository.delete({idGrupa: groupId});
+    return GrupaSerializer.serialize({id: groupId});
   }
 }

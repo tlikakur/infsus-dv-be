@@ -6,7 +6,7 @@ import {Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn} fr
 @Entity("dijete", { schema: "public" })
 export class Dijete {
   @PrimaryGeneratedColumn({ type: "integer", name: "iddijete" })
-  iddijete: number;
+  idDijete: number;
 
   @Column("character varying", { name: "ime", length: 50 })
   ime: string;
@@ -18,12 +18,12 @@ export class Dijete {
   oib: string;
 
   @Column("date", { name: "datumrodenja" })
-  datumrodenja: string;
+  datumRodenja: string;
 
   
   @ManyToOne(() => Grupa, (grupa) => grupa.djeca)
   @JoinColumn([{ name: "idgrupa", referencedColumnName: "idgrupa" }])
-  idgrupa: Grupa;
+  idGrupa: Grupa;
 
   // @ManyToMany(() => Bolest, (bolest) => bolest.dijetes)
   // bolests: Bolest[];

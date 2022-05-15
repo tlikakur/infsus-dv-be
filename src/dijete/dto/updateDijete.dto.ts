@@ -1,5 +1,6 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateDijeteDto } from './createDijete.dto';
+import { Grupa } from '../../grupa/entities/grupa.entity';
 import { 
   IsDate, 
   IsNumber,
@@ -20,7 +21,7 @@ export class UpdateDijeteDto extends PartialType(CreateDijeteDto) {
 
   @IsDate({message: 'Datum rodenja mora biti u formatu datuma'})
   @IsOptional()
-  datumRodenja: Date;
+  datumRodenja: string;
 
   @MaxLength(30, {message: 'Ime djeteta može sadržavati najviše 30 znakova'})
   @MinLength(2, {message: 'Ime djeteta mora sadržavati barem 2 znaka'})
@@ -36,7 +37,7 @@ export class UpdateDijeteDto extends PartialType(CreateDijeteDto) {
 
   @IsNumber({}, {message: 'ID grupe mora biti brojčana vrijednost'})
   @IsOptional()
-  idGrupa: number;
+  idGrupa: Grupa;
 }
 
 

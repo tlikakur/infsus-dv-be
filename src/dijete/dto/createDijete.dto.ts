@@ -1,3 +1,4 @@
+import { Grupa } from "../../grupa/entities/grupa.entity";
 import { 
   IsDate, 
   IsNotEmpty, 
@@ -10,6 +11,7 @@ import {
   MinLength 
 } from "class-validator";
 
+
 export class CreateDijeteDto {
 
   @Max(99999999999, { message: 'OIB djeteta mora sadržavati točno 11 znakova'})
@@ -19,7 +21,7 @@ export class CreateDijeteDto {
   oib!: string;
 
   @IsDate({message: 'Datum rodenja mora biti u formatu YYYY-MM-DD'})
-  datumRodenja!: Date;
+  datumRodenja!: string;
 
   @MaxLength(30, {message: 'Ime djeteta može sadržavati najviše 30 znakova'})
   @MinLength(2, {message: 'Ime djeteta mora sadržavati barem 2 znaka'})
@@ -33,5 +35,5 @@ export class CreateDijeteDto {
 
   @IsNumber({}, {message: 'ID grupe mora biti brojčana vrijednost'})
   @IsOptional()
-  idGrupa: number;
+  idGrupa: Grupa;
 }
