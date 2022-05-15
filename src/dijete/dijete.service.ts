@@ -18,7 +18,6 @@ export class DijeteService {
       throw new ConflictException(`Dijete sa OIB-om ${child.oib} je već u sustavu`);
 
     await this.dijeteRepository.insert(child);
-
     return DijeteSerializer.serialize(child);
   }
 
@@ -37,7 +36,7 @@ export class DijeteService {
   }
 
   public async findOne(id: number): Promise<Dijete> {
-    const child = await this.dijeteRepository.findOne({idDijete: id});
+    const child = await this.dijeteRepository.findOne({iddijete: id});
 
     if(!child) throw new NotFoundException(`Dijete #${id} ne postoji`);
     return DijeteSerializer.serialize(child);
@@ -51,12 +50,12 @@ export class DijeteService {
   }
 
   public async update(id: number, updateDijeteDto: UpdateDijeteDto): Promise<number> {
-    await this.dijeteRepository.update({idDijete: id}, updateDijeteDto);
-    return id;
+    await this.dijeteRepository.update({iddijete: id}, updateDijeteDto);
+    return DijeteSerializer.serialize({id: id});
   }
 
   public async remove(id: number): Promise<number> {
-    await this.dijeteRepository.delete({idDijete: id});
-    return id;
+    await this.dijeteRepository.delete({iddijete: id});
+    return DijeteSerializer.serialize({id: id});
   }
 }

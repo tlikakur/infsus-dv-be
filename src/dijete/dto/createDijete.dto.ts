@@ -35,5 +35,5 @@ export class CreateDijeteDto {
 
   @IsNumber({}, {message: 'ID grupe mora biti brojčana vrijednost'})
   @IsOptional()
-  idGrupa: Grupa;
+  idgrupa: Grupa;
 }

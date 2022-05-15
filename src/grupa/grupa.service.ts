@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DijeteService } from '../dijete/dijete.service';
 import { Dijete } from '../dijete/entities/dijete.entity';
@@ -8,10 +8,10 @@ import { UpdateGrupaDto } from './dto/updateGrupa.dto';
 import { Grupa } from './entities/grupa.entity';
 import { GrupaSerializer } from './grupa.serializer';
 
-export interface IGrupaDetails {
+export interface IGroupDetails {
   id: number,
   naziv: string,
-  datumOsnivanja: Date,
+  datumosnivanja: Date,
   djeca?: Dijete[]
 }
 
@@ -24,6 +24,9 @@ export class GrupaService {
   ){}
 
   public async create(grupa: CreateGrupaDto) {
+
+    const count = await this.grupaRepository.count({naziv: grupa.naziv});
+    if(count != 0) throw new ConflictException(`Grupa ${grupa.naziv} već postoji u sustavu`)
     await this.grupaRepository.insert(grupa);
   }
 
@@ -40,29 +43,30 @@ export class GrupaService {
     await this.grupaRepository.find({where: { naziv: `%${groupName}%` } });
   }
 
-  public async findOne(id: number): Promise<IGrupaDetails> {
-    const grupa = await this.grupaRepository.findOne({idGrupa: id});
+  public async findOne(id: number): Promise<any> {
+  
+    const group = await this.grupaRepository.findOne({idgrupa: id});
 
-    if(!grupa) throw new NotFoundException(`Grupa #${id} ne postoji`);
+    if(!group) throw new NotFoundException(`Grupa #${id} ne postoji`);
 
-    try{ grupa.djeca = await this.dijeteService.findByGroup(id); }
+    let djeca: Dijete[] = [];
+    try{ djeca = await this.dijeteService.findByGroup(id); }
     catch(err: unknown){ console.log(err); }
 
-    return GrupaSerializer.serialize({ 
-      id: grupa.idGrupa,
-      naziv: grupa.naziv,
-      datumOsnivanja: grupa.datumOsnivanja,
-      djeca: grupa.djeca 
+    return GrupaSerializer.serialize({
+      naziv: group.naziv,
+      datumosnivanja: group.datumosnivanja,
+      djeca: djeca
     });
   }
 
   public async update(groupId: number, grupa: UpdateGrupaDto): Promise<number> {
-    await this.grupaRepository.update({idGrupa: groupId}, grupa);
+    await this.grupaRepository.update({idgrupa: groupId}, grupa);
     return GrupaSerializer.serialize({id: groupId});
   }
 
   public async remove(groupId: number): Promise<number> {
-    await this.grupaRepository.delete({idGrupa: groupId});
+    await this.grupaRepository.delete({idgrupa: groupId});
     return GrupaSerializer.serialize({id: groupId});
   }
 }

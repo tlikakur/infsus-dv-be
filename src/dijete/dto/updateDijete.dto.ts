@@ -21,7 +21,7 @@ export class UpdateDijeteDto extends PartialType(CreateDijeteDto) {
 
   @IsDate({message: 'Datum rodenja mora biti u formatu datuma'})
   @IsOptional()
-  datumRodenja: string;
+  datumrodenja: string;
 
   @MaxLength(30, {message: 'Ime djeteta može sadržavati najviše 30 znakova'})
   @MinLength(2, {message: 'Ime djeteta mora sadržavati barem 2 znaka'})
@@ -37,7 +37,7 @@ export class UpdateDijeteDto extends PartialType(CreateDijeteDto) {
 
   @IsNumber({}, {message: 'ID grupe mora biti brojčana vrijednost'})
   @IsOptional()
-  idGrupa: Grupa;
+  idgrupa: Grupa;
 }
 
 

@@ -2,31 +2,25 @@ import {
   Column,
   Entity,
   Index,
-  JoinColumn,
-  JoinTable,
-  ManyToMany,
-  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Dijete } from "../../dijete/entities/dijete.entity";
-import { Odgajatelj } from "../../model/entities/Odgajatelj";
-import { Izlet } from "../../model/entities/Izlet";
 
 @Index("grupa_pkey", ["idgrupa"], { unique: true })
 @Index("grupa_naziv_key", ["naziv"], { unique: true })
 @Entity("grupa", { schema: "public" })
 export class Grupa {
   @PrimaryGeneratedColumn({ type: "integer", name: "idgrupa" })
-  idGrupa: number;
+  idgrupa: number;
 
   @Column("date", { name: "datumosnivanja" })
-  datumOsnivanja: string;
+  datumosnivanja: string;
 
   @Column("character varying", { name: "naziv", unique: true, length: 50 })
   naziv: string;
 
-  @OneToMany(() => Dijete, (dijete) => dijete.idGrupa)
+  @OneToMany(() => Dijete, (dijete) => dijete.idgrupa)
   djeca: Dijete[];
 
   // @ManyToOne(() => Odgajatelj, (odgajatelj) => odgajatelj.grupe)
