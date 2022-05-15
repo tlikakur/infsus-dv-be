@@ -2,7 +2,7 @@ import { IsDate, IsNumber, IsOptional, IsString, MaxLength, MinLength } from "cl
 
 export class CreateDijeteDto {
 
-  @IsDate({message: 'Datum rodenja mora biti u formatu datuma'})
+  @IsDate({message: 'Datum rodenja mora biti u formatu YYYY-MM-DD'})
   datumRodenja!: Date;
 
   @MaxLength(30, {message: 'Ime djeteta može sadržavati najviše 30 znakova'})
