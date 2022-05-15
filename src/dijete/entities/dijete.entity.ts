@@ -20,6 +20,7 @@ export class Dijete {
   @Column("date", { name: "datumrodenja" })
   datumrodenja: string;
 
+  
   @ManyToOne(() => Grupa, (grupa) => grupa.djeca)
   @JoinColumn([{ name: "idgrupa", referencedColumnName: "idgrupa" }])
   idgrupa: Grupa;

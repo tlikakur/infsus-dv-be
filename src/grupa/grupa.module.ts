@@ -4,11 +4,12 @@ import { GrupaController } from './grupa.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Grupa } from './entities/grupa.entity';
 import { Dijete } from '../dijete/entities/dijete.entity';
+import { DijeteModule } from '../dijete/dijete.module';
 
 @Module({
   controllers: [GrupaController],
   providers: [GrupaService, Grupa],
-  imports: [TypeOrmModule.forFeature([Grupa]), Dijete],
+  imports: [TypeOrmModule.forFeature([Grupa]), DijeteModule],
   exports: [Grupa]
 })
 export class GrupaModule {}

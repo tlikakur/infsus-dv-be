@@ -8,7 +8,7 @@ import { Grupa } from '../grupa/entities/grupa.entity';
 @Module({
   controllers: [DijeteController],
   providers: [DijeteService, Dijete],
-  imports: [TypeOrmModule.forFeature([Dijete]), Grupa],
-  exports: [Dijete]
+  imports: [Grupa, TypeOrmModule.forFeature([Dijete])],
+  exports: [Dijete, DijeteService]
 })
 export class DijeteModule {}

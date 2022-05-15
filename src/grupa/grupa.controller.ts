@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { GrupaService } from './grupa.service';
+import { GrupaService, IGrupaDetails } from './grupa.service';
 import { CreateGrupaDto } from './dto/createGrupa.dto';
 import { UpdateGrupaDto } from './dto/updateGrupa.dto';
 

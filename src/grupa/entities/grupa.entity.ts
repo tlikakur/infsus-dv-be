@@ -26,11 +26,7 @@ export class Grupa {
   @Column("character varying", { name: "naziv", unique: true, length: 50 })
   naziv: string;
 
-  @Column()
-  iddjeca: Dijete[];
-
   @OneToMany(() => Dijete, (dijete) => dijete.idgrupa)
-  @JoinColumn([{name: "iddjeca" }])
   djeca: Dijete[];
 
   // @ManyToOne(() => Odgajatelj, (odgajatelj) => odgajatelj.grupe)

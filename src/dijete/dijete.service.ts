@@ -16,17 +16,24 @@ export class DijeteService {
   }
 
   public async findAll(): Promise<Dijete[]> {
-    const dijeteList = await this.dijeteRepository.find();
+    const childrenList = await this.dijeteRepository.find();
 
-    if(!dijeteList.length) throw new NotFoundException(`Popis djece je prazan`);
-    return dijeteList;
+    if(!childrenList.length) throw new NotFoundException(`Popis djece je prazan`);
+    return childrenList;
+  }
+
+  public async findByGroup(groupId: number): Promise<Dijete[]> {
+    const childrenList = await this.dijeteRepository.find({where: {'idgrupa' : groupId}});
+
+    if(!childrenList.length) throw new NotFoundException(`Popis djece za grupu #${groupId} je prazan`);
+    return childrenList;
   }
 
   public async findOne(id: number): Promise<Dijete> {
-    const dijete = await this.dijeteRepository.findOne({iddijete: id});
+    const child = await this.dijeteRepository.findOne({iddijete: id});
 
-    if(!dijete) throw new NotFoundException(`Dijete #${id} ne postoji`);
-    return dijete;
+    if(!child) throw new NotFoundException(`Dijete #${id} ne postoji`);
+    return child;
   }
 
   public async update(id: number, updateDijeteDto: UpdateDijeteDto): Promise<number> {

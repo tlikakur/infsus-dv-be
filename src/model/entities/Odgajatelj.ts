@@ -6,7 +6,6 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Grupa } from "../../grupa/entities/grupa.entity";
 import { Zaposlenik } from "./Zaposlenik";
 
 @Index("odgajatelj_pkey", ["idodgajatelj"], { unique: true })
