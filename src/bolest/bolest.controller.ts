@@ -3,6 +3,10 @@ import { BolestService } from './bolest.service';
 import { CreateBolestDto } from './dto/createBolest.dto';
 import { UpdateBolestDto } from './dto/updateBolest.dto';
 
+class DiseaseChildParams {
+  diseaseId: string;
+  childId: string;
+}
 @Controller('bolest')
 export class BolestController {
   constructor(private readonly bolestService: BolestService) {}
@@ -30,5 +34,15 @@ export class BolestController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.bolestService.remove(+id);
+  }
+
+  @Post(':diseaseId/dijete/:childId')
+  assignDiseaseToChild(@Param() params: DiseaseChildParams) {
+    return this.bolestService.assignDiseaseToChild(+params.diseaseId, +params.childId);
+  }
+
+  @Delete(':diseaseId/dijete/:childId')
+  removeDiseaseFromChild(@Param() params: DiseaseChildParams) {
+    return this.bolestService.removeDiseaseFromChild(+params.diseaseId, +params.childId);
   }
 }
