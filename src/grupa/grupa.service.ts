@@ -45,6 +45,11 @@ export class GrupaService {
     await this.dijeteService.assignGroup(childId, groupId);
   }
 
+  /**
+   *
+   * @param groupName Name or part of the name of a group
+   * @returns List of groups that match regex %groupName%
+   */
   public async findByName(groupName: string) {
     const group = await this.grupaRepository.find({ where: { naziv: `%${groupName}%` } });
 

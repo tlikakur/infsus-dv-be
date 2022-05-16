@@ -37,6 +37,11 @@ export class BolestService {
     return BolestSerializer.serialize(disease);
   }
 
+  /**
+   *
+   * @param diseaseName Name or part of the name of the disease
+   * @returns List of diseases that match regex %diseaseName%
+   */
   public async findByName(diseaseName: string): Promise<Bolest> {
     const disease = await this.bolestRepository.findOne({ naziv: `%${diseaseName}%` });
 
