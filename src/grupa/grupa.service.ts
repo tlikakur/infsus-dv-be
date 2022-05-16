@@ -46,7 +46,12 @@ export class GrupaService {
   }
 
   public async findByName(groupName: string) {
-    await this.grupaRepository.find({ where: { naziv: `%${groupName}%` } });
+    const group = await this.grupaRepository.find({ where: { naziv: `%${groupName}%` } });
+
+    if (!group.length)
+      throw new NotFoundException(`Nema rezultata za pretragu grupe '${groupName}'`);
+
+    return GrupaSerializer.serialize(group);
   }
 
   public async findOne(id: number): Promise<any> {

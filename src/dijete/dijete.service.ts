@@ -28,6 +28,22 @@ export class DijeteService {
     return children;
   }
 
+  /**
+   *
+   * @param oib OIB or part of the OIB
+   * @returns List of children that match regex %oib%
+   */
+  public async findByOIB(oib: number) {
+    const children = await this.dijeteRepository.find({ where: { oib: `%${oib}%` } });
+    if (!children.length) throw new NotFoundException(`Nema rezultata za OIB ${oib}`);
+
+    return DijeteSerializer.serialize(children);
+  }
+
+  /**
+   * @param groupId ID of a group that child belongs
+   * @returns List of children that belong specified group
+   */
   public async findByGroup(groupId: number): Promise<Dijete[]> {
     const children = await this.dijeteRepository.find({ where: { idgrupa: groupId } });
 
@@ -43,6 +59,12 @@ export class DijeteService {
     return DijeteSerializer.serialize(child);
   }
 
+  /**
+   *
+   * @param childId ID of a child
+   * @param groupId ID of a group
+   * @desc Assigns a group for a child
+   */
   public async assignGroup(childId: number, groupId: number): Promise<void> {
     const count = await this.dijeteRepository.count({ iddijete: childId });
     if (count == 0) throw new ConflictException(`Dijete #${childId} ne postoji sustavu`);

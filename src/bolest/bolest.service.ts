@@ -38,10 +38,10 @@ export class BolestService {
   }
 
   public async findByName(diseaseName: string): Promise<Bolest> {
-    const disease = await this.bolestRepository.findOne({ naziv: diseaseName });
+    const disease = await this.bolestRepository.findOne({ naziv: `%${diseaseName}%` });
 
     if (!disease)
-      throw new NotFoundException(`Bolest "${diseaseName}" ne postoji u sustavu.`);
+      throw new NotFoundException(`Nema rezultata za pretragu bolesti "${diseaseName}"`);
 
     return disease;
   }
