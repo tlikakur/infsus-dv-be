@@ -47,6 +47,3 @@ export class BolestController {
     return this.bolestService.removeDiseaseFromChild(+params.diseaseId, +params.childId);
   }
 }
-function QueryParams(arg0: { required: boolean }) {
-  throw new Error('Function not implemented.');
-}
