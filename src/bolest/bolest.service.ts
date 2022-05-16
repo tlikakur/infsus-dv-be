@@ -1,6 +1,6 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { CreateBolestDto } from './dto/createBolest.dto';
 import { UpdateBolestDto } from './dto/updateBolest.dto';
 import { Bolest } from './entities/bolest.entity';
@@ -23,7 +23,9 @@ export class BolestService {
     return BolestSerializer.serialize(disease);
   }
 
-  public async findAll(): Promise<Bolest[]> {
+  public async findAll(diseaseName?: string): Promise<Bolest[]> {
+    if (diseaseName) return await this.findByName(diseaseName);
+
     const diseases = await this.bolestRepository.find();
     if (!diseases.length) throw new NotFoundException('Popis bolesti je prazan');
 
@@ -46,13 +48,15 @@ export class BolestService {
    * @param diseaseName Name or part of the name of the disease
    * @returns List of diseases that match regex %diseaseName%
    */
-  public async findByName(diseaseName: string): Promise<Bolest> {
-    const disease = await this.bolestRepository.findOne({ naziv: `%${diseaseName}%` });
+  public async findByName(diseaseName: string): Promise<Bolest[]> {
+    const diseases = await this.bolestRepository.find({
+      naziv: Like(`%${diseaseName}%`)
+    });
 
-    if (!disease)
+    if (!diseases.length)
       throw new NotFoundException(`Nema rezultata za pretragu bolesti "${diseaseName}"`);
 
-    return disease;
+    return BolestSerializer.serialize(diseases);
   }
 
   /**
@@ -102,15 +106,12 @@ export class BolestService {
     return BolestSerializer.serialize({ idbolest: diseaseId });
   }
 
-  public async update(
-    diseaseId: number,
-    updateBolestDto: UpdateBolestDto
-  ): Promise<number> {
+  public async update(diseaseId: number, bolest: UpdateBolestDto): Promise<number> {
     const count = await this.bolestRepository.count({ idbolest: diseaseId });
     if (count == 0)
       throw new ConflictException(`Bolest #${diseaseId} ne postoji sustavu`);
 
-    await this.bolestRepository.update({ idbolest: diseaseId }, updateBolestDto);
+    await this.bolestRepository.update({ idbolest: diseaseId }, bolest);
 
     return BolestSerializer.serialize({ id: diseaseId });
   }

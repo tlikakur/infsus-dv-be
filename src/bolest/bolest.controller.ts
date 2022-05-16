@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Query, Delete } from '@nestjs/common';
 import { BolestService } from './bolest.service';
 import { CreateBolestDto } from './dto/createBolest.dto';
 import { UpdateBolestDto } from './dto/updateBolest.dto';
@@ -7,6 +7,7 @@ class DiseaseChildParams {
   diseaseId: string;
   childId: string;
 }
+
 @Controller('bolest')
 export class BolestController {
   constructor(private readonly bolestService: BolestService) {}
@@ -17,8 +18,8 @@ export class BolestController {
   }
 
   @Get()
-  findAll() {
-    return this.bolestService.findAll();
+  findAll(@Query('naziv') diseaseName: string) {
+    return this.bolestService.findAll(diseaseName);
   }
 
   @Get(':id')
@@ -45,4 +46,7 @@ export class BolestController {
   removeDiseaseFromChild(@Param() params: DiseaseChildParams) {
     return this.bolestService.removeDiseaseFromChild(+params.diseaseId, +params.childId);
   }
+}
+function QueryParams(arg0: { required: boolean }) {
+  throw new Error('Function not implemented.');
 }
