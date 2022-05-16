@@ -3,7 +3,6 @@ import { GrupaService } from './grupa.service';
 import { GrupaController } from './grupa.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Grupa } from './entities/grupa.entity';
-import { Dijete } from '../dijete/entities/dijete.entity';
 import { DijeteModule } from '../dijete/dijete.module';
 
 @Module({

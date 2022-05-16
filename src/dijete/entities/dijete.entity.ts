@@ -1,28 +1,33 @@
-import { Grupa } from "../../grupa/entities/grupa.entity";
-import {Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
+import { Grupa } from '../../grupa/entities/grupa.entity';
+import {
+  Column,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn
+} from 'typeorm';
 
-
-@Index("dijete_pkey", ["iddijete"], { unique: true })
-@Entity("dijete", { schema: "public" })
+@Index('dijete_pkey', ['iddijete'], { unique: true })
+@Entity('dijete', { schema: 'public' })
 export class Dijete {
-  @PrimaryGeneratedColumn({ type: "integer", name: "iddijete" })
+  @PrimaryGeneratedColumn({ type: 'integer', name: 'iddijete' })
   iddijete: number;
 
-  @Column("character varying", { name: "ime", length: 50 })
+  @Column('character varying', { name: 'ime', length: 50 })
   ime: string;
 
-  @Column("character varying", { name: "prezime", length: 50 })
+  @Column('character varying', { name: 'prezime', length: 50 })
   prezime: string;
 
-  @Column("numeric", { name: "oib", precision: 11, scale: 0 })
+  @Column('numeric', { name: 'oib', precision: 11, scale: 0 })
   oib: string;
 
-  @Column("date", { name: "datumrodenja" })
+  @Column('date', { name: 'datumrodenja' })
   datumrodenja: string;
 
-  
   @ManyToOne(() => Grupa, (grupa) => grupa.djeca)
-  @JoinColumn([{ name: "idgrupa", referencedColumnName: "idgrupa" }])
+  @JoinColumn([{ name: 'idgrupa', referencedColumnName: 'idgrupa' }])
   idgrupa: Grupa;
 
   // @ManyToMany(() => Bolest, (bolest) => bolest.dijetes)
