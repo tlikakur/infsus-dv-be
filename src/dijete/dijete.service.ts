@@ -1,6 +1,6 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { DijeteSerializer } from './dijete.serializer';
 import { CreateDijeteDto } from './dto/createDijete.dto';
 import { UpdateDijeteDto } from './dto/updateDijete.dto';
@@ -19,7 +19,9 @@ export class DijeteService {
     return DijeteSerializer.serialize(child);
   }
 
-  public async findAll(): Promise<Dijete[]> {
+  public async findAll(oib?: number): Promise<Dijete[]> {
+    if (oib) return await this.findByOIB(oib);
+
     const children = await this.dijeteRepository.find();
     if (!children.length) throw new NotFoundException(`Popis djece je prazan`);
 
@@ -30,11 +32,14 @@ export class DijeteService {
 
   /**
    *
-   * @param oib OIB or part of the OIB
-   * @returns List of children that match regex %oib%
+   * @param oib OIB of the child
+   * @returns List of children that match given OIB
    */
-  public async findByOIB(oib: number) {
-    const children = await this.dijeteRepository.find({ where: { oib: `%${oib}%` } });
+  public async findByOIB(oib: number): Promise<Dijete[]> {
+    const children = await this.dijeteRepository.find({
+      where: { oib: oib }
+    });
+
     if (!children.length) throw new NotFoundException(`Nema rezultata za OIB ${oib}`);
 
     return DijeteSerializer.serialize(children);
@@ -65,7 +70,7 @@ export class DijeteService {
    * @param groupId ID of a group
    * @desc Assigns a group for a child
    */
-  public async assignGroup(childId: number, groupId: number): Promise<void> {
+  public async assignGroup(childId: number, groupId: number): Promise<number> {
     const count = await this.dijeteRepository.count({ iddijete: childId });
     if (count == 0) throw new ConflictException(`Dijete #${childId} ne postoji sustavu`);
 
@@ -73,6 +78,8 @@ export class DijeteService {
     await this.dijeteRepository.query(
       `UPDATE Dijete SET idGrupa = ${groupId} WHERE idDijete = ${childId}`
     );
+
+    return DijeteSerializer.serialize({ iddijete: childId });
   }
 
   public async update(

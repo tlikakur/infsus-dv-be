@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { DijeteService } from './dijete.service';
 import { CreateDijeteDto } from './dto/createDijete.dto';
 import { UpdateDijeteDto } from './dto/updateDijete.dto';
@@ -13,8 +13,8 @@ export class DijeteController {
   }
 
   @Get()
-  findAll() {
-    return this.dijeteService.findAll();
+  findAll(@Query('oib') oib?: string) {
+    return this.dijeteService.findAll(+oib);
   }
 
   @Get(':id')
