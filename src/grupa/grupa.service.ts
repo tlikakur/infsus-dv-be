@@ -2,7 +2,7 @@ import { ConflictException, Injectable, NotFoundException } from '@nestjs/common
 import { InjectRepository } from '@nestjs/typeorm';
 import { DijeteService } from '../dijete/dijete.service';
 import { Dijete } from '../dijete/entities/dijete.entity';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { CreateGrupaDto } from './dto/createGrupa.dto';
 import { UpdateGrupaDto } from './dto/updateGrupa.dto';
 import { Grupa } from './entities/grupa.entity';
@@ -22,15 +22,19 @@ export class GrupaService {
     private dijeteService: DijeteService
   ) {}
 
-  public async create(grupa: CreateGrupaDto) {
+  public async create(grupa: CreateGrupaDto): Promise<Grupa> {
     const count = await this.grupaRepository.count({ naziv: grupa.naziv });
     if (count != 0)
       throw new ConflictException(`Grupa ${grupa.naziv} već postoji u sustavu`);
 
     await this.grupaRepository.insert(grupa);
+
+    return GrupaSerializer.serialize(grupa);
   }
 
-  public async findAll(): Promise<Grupa[]> {
+  public async findAll(groupName?: string): Promise<Grupa[]> {
+    if (groupName) return await this.findByName(groupName);
+
     const groups = await this.grupaRepository.find();
 
     groups.sort((first, second) => first.idgrupa - second.idgrupa);
@@ -38,11 +42,13 @@ export class GrupaService {
     return GrupaSerializer.serialize(groups);
   }
 
-  public async insertChild(groupId: number, childId: number) {
+  public async insertChild(groupId: number, childId: number): Promise<number> {
     const count = await this.grupaRepository.count({ idgrupa: groupId });
     if (count == 0) throw new ConflictException(`Grupa #${groupId} ne postoji sustavu`);
 
     await this.dijeteService.assignGroup(childId, groupId);
+
+    return GrupaSerializer.serialize({ idgrupa: groupId });
   }
 
   /**
@@ -50,16 +56,18 @@ export class GrupaService {
    * @param groupName Name or part of the name of a group
    * @returns List of groups that match regex %groupName%
    */
-  public async findByName(groupName: string) {
-    const group = await this.grupaRepository.find({ where: { naziv: `%${groupName}%` } });
+  public async findByName(groupName: string): Promise<Grupa[]> {
+    const groups = await this.grupaRepository.find({
+      where: { naziv: Like(`%${groupName}%`) }
+    });
 
-    if (!group.length)
+    if (!groups.length)
       throw new NotFoundException(`Nema rezultata za pretragu grupe '${groupName}'`);
 
-    return GrupaSerializer.serialize(group);
+    return GrupaSerializer.serialize(groups);
   }
 
-  public async findOne(id: number): Promise<any> {
+  public async findOne(id: number): Promise<Grupa> {
     const group = await this.grupaRepository.findOne({ idgrupa: id });
     if (!group) throw new NotFoundException(`Grupa #${id} ne postoji`);
 
@@ -67,8 +75,7 @@ export class GrupaService {
     try {
       djeca = await this.dijeteService.findByGroup(id);
     } catch (err: unknown) {
-      // eslint-disable-next-line no-console
-      console.log(err);
+      // TODO: Handle
     }
 
     return GrupaSerializer.serialize({

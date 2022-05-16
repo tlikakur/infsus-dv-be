@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { GrupaService } from './grupa.service';
 import { CreateGrupaDto } from './dto/createGrupa.dto';
 import { UpdateGrupaDto } from './dto/updateGrupa.dto';
@@ -13,8 +13,8 @@ export class GrupaController {
   }
 
   @Get()
-  findAll() {
-    return this.grupaService.findAll();
+  findAll(@Query('naziv') groupName?: string) {
+    return this.grupaService.findAll(groupName);
   }
 
   @Get(':groupId')
