@@ -23,6 +23,8 @@ export class DijeteService {
     const children = await this.dijeteRepository.find();
     if (!children.length) throw new NotFoundException(`Popis djece je prazan`);
 
+    children.sort((first, second) => first.iddijete - second.iddijete);
+
     return children;
   }
 

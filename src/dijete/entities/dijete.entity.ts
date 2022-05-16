@@ -1,10 +1,12 @@
 import { Grupa } from '../../grupa/entities/grupa.entity';
+import { Bolest } from '../../bolest/entities/bolest.entity';
 import {
   Column,
   Entity,
   Index,
   JoinColumn,
   ManyToOne,
+  ManyToMany,
   PrimaryGeneratedColumn
 } from 'typeorm';
 
@@ -30,8 +32,8 @@ export class Dijete {
   @JoinColumn([{ name: 'idgrupa', referencedColumnName: 'idgrupa' }])
   idgrupa: Grupa;
 
-  // @ManyToMany(() => Bolest, (bolest) => bolest.dijetes)
-  // bolests: Bolest[];
+  @ManyToMany(() => Bolest, (bolest) => bolest.djeca)
+  bolesti: Bolest[];
 
   // @OneToOne(() => Dijeteziviu, (dijeteziviu) => dijeteziviu.iddijete2)
   // dijeteziviu: Dijeteziviu;

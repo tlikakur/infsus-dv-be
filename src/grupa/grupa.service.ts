@@ -9,52 +9,57 @@ import { Grupa } from './entities/grupa.entity';
 import { GrupaSerializer } from './grupa.serializer';
 
 export interface IGroupDetails {
-  id: number,
-  naziv: string,
-  datumosnivanja: Date,
-  djeca?: Dijete[]
+  id: number;
+  naziv: string;
+  datumosnivanja: Date;
+  djeca?: Dijete[];
 }
 
 @Injectable()
 export class GrupaService {
-
   constructor(
     @InjectRepository(Grupa) private grupaRepository: Repository<Grupa>,
     private dijeteService: DijeteService
-  ){}
+  ) {}
 
   public async create(grupa: CreateGrupaDto) {
-    const count = await this.grupaRepository.count({naziv: grupa.naziv});
-    if(count != 0) 
-      throw new ConflictException(`Grupa ${grupa.naziv} već postoji u sustavu`)
+    const count = await this.grupaRepository.count({ naziv: grupa.naziv });
+    if (count != 0)
+      throw new ConflictException(`Grupa ${grupa.naziv} već postoji u sustavu`);
 
     await this.grupaRepository.insert(grupa);
   }
 
   public async findAll(): Promise<Grupa[]> {
     const groups = await this.grupaRepository.find();
+
+    groups.sort((first, second) => first.idgrupa - second.idgrupa);
+
     return GrupaSerializer.serialize(groups);
   }
 
-  public async insertChild(groupId: number, childId: number){
-    const count = await this.grupaRepository.count({idgrupa: groupId});
-    if(count == 0) 
-      throw new ConflictException(`Grupa #${groupId} ne postoji sustavu`)
+  public async insertChild(groupId: number, childId: number) {
+    const count = await this.grupaRepository.count({ idgrupa: groupId });
+    if (count == 0) throw new ConflictException(`Grupa #${groupId} ne postoji sustavu`);
 
     await this.dijeteService.assignGroup(childId, groupId);
   }
 
-  public async findByName(groupName: string){
-    await this.grupaRepository.find({where: { naziv: `%${groupName}%` } });
+  public async findByName(groupName: string) {
+    await this.grupaRepository.find({ where: { naziv: `%${groupName}%` } });
   }
 
   public async findOne(id: number): Promise<any> {
-    const group = await this.grupaRepository.findOne({idgrupa: id});
-    if(!group) throw new NotFoundException(`Grupa #${id} ne postoji`);
+    const group = await this.grupaRepository.findOne({ idgrupa: id });
+    if (!group) throw new NotFoundException(`Grupa #${id} ne postoji`);
 
     let djeca: Dijete[] = [];
-    try{ djeca = await this.dijeteService.findByGroup(id); }
-    catch(err: unknown){ console.log(err); }
+    try {
+      djeca = await this.dijeteService.findByGroup(id);
+    } catch (err: unknown) {
+      // eslint-disable-next-line no-console
+      console.log(err);
+    }
 
     return GrupaSerializer.serialize({
       naziv: group.naziv,
@@ -64,20 +69,18 @@ export class GrupaService {
   }
 
   public async update(groupId: number, grupa: UpdateGrupaDto): Promise<number> {
-    const count = await this.grupaRepository.count({idgrupa: groupId});
-    if(count == 0) 
-      throw new ConflictException(`Grupa #${groupId} ne postoji sustavu`)
+    const count = await this.grupaRepository.count({ idgrupa: groupId });
+    if (count == 0) throw new ConflictException(`Grupa #${groupId} ne postoji sustavu`);
 
-    await this.grupaRepository.update({idgrupa: groupId}, grupa);
-    return GrupaSerializer.serialize({id: groupId});
+    await this.grupaRepository.update({ idgrupa: groupId }, grupa);
+    return GrupaSerializer.serialize({ id: groupId });
   }
 
   public async remove(groupId: number): Promise<number> {
-    const count = await this.grupaRepository.count({idgrupa: groupId});
-    if(count == 0) 
-      throw new ConflictException(`Grupa #${groupId} ne postoji sustavu`)
-      
-    await this.grupaRepository.delete({idgrupa: groupId});
-    return GrupaSerializer.serialize({id: groupId});
+    const count = await this.grupaRepository.count({ idgrupa: groupId });
+    if (count == 0) throw new ConflictException(`Grupa #${groupId} ne postoji sustavu`);
+
+    await this.grupaRepository.delete({ idgrupa: groupId });
+    return GrupaSerializer.serialize({ id: groupId });
   }
 }

@@ -24,7 +24,7 @@ export class GrupaController {
 
   @Post(':groupId/dijete/:childId')
   insertChild(@Param('groupId') groupId: string, @Param('childId') childId: string) {
-    return this.grupaService.insertChild(+groupId, +childId)
+    return this.grupaService.insertChild(+groupId, +childId);
   }
 
   @Patch(':groupId')
