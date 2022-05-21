@@ -1,6 +1,6 @@
 import { Serializer } from 'jsonapi-serializer';
 
 export const GrupaSerializer = new Serializer('group', {
-  id: 'id',
+  id: 'idgrupa',
   attributes: ['naziv', 'datumosnivanja', 'djeca']
 });
