@@ -8,17 +8,14 @@ import { GrupaModule } from './grupa/grupa.module';
 import { DijeteModule } from './dijete/dijete.module';
 import { BolestModule } from './bolest/bolest.module';
 
-
 @Module({
   imports: [
-    TypeOrmModule.forRoot(dbConfig.getTypeOrmConfig()), 
-    GrupaModule, 
-    DijeteModule, 
+    TypeOrmModule.forRoot(dbConfig.getTypeOrmConfig()),
+    GrupaModule,
+    DijeteModule,
     BolestModule
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService]
 })
-
-export class AppModule { }
-
+export class AppModule {}
