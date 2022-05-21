@@ -1,6 +1,6 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Like, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { DijeteSerializer } from './dijete.serializer';
 import { CreateDijeteDto } from './dto/createDijete.dto';
 import { UpdateDijeteDto } from './dto/updateDijete.dto';
@@ -27,7 +27,7 @@ export class DijeteService {
 
     children.sort((first, second) => first.iddijete - second.iddijete);
 
-    return children;
+    return DijeteSerializer.serialize(children);
   }
 
   /**
