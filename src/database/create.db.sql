@@ -98,7 +98,7 @@ CREATE TABLE Izostanak
   idDijete INT NOT NULL,
   idIzlet INT NOT NULL,
   PRIMARY KEY (idDijete, idIzlet),
-  FOREIGN KEY (idDijete) REFERENCES Dijete(idDijete),
+  FOREIGN KEY (idDijete) REFERENCES Dijete(idDijete) ON DELETE CASCADE,
   FOREIGN KEY (idIzlet) REFERENCES Izlet(idIzlet) ON DELETE CASCADE
 );
 
@@ -116,8 +116,8 @@ CREATE TABLE dijeteZiviU
   postanskiBroj INT NOT NULL,
   idDijete INT NOT NULL,
   PRIMARY KEY (idDijete),
-  FOREIGN KEY (postanskiBroj) REFERENCES Mjesto(postanskiBroj),
-  FOREIGN KEY (idDijete) REFERENCES Dijete(idDijete)
+  FOREIGN KEY (postanskiBroj) REFERENCES Mjesto(postanskiBroj) ON DELETE CASCADE,
+  FOREIGN KEY (idDijete) REFERENCES Dijete(idDijete) ON DELETE CASCADE
 );
 
 CREATE TABLE zaposlenikZiviU
@@ -126,8 +126,8 @@ CREATE TABLE zaposlenikZiviU
   postanskiBroj INT NOT NULL,
   idZaposlenik INT NOT NULL,
   PRIMARY KEY (idZaposlenik),
-  FOREIGN KEY (postanskiBroj) REFERENCES Mjesto(postanskiBroj),
-  FOREIGN KEY (idZaposlenik) REFERENCES Zaposlenik(idZaposlenik)
+  FOREIGN KEY (postanskiBroj) REFERENCES Mjesto(postanskiBroj) ON DELETE CASCADE,,
+  FOREIGN KEY (idZaposlenik) REFERENCES Zaposlenik(idZaposlenik) ON DELETE CASCADE,
 );
 
 CREATE TABLE Placa
@@ -138,7 +138,7 @@ CREATE TABLE Placa
   brutoIznos FLOAT NOT NULL,
   idZaposlenik INT NOT NULL,
   PRIMARY KEY (idPlaca),
-  FOREIGN KEY (idZaposlenik) REFERENCES Zaposlenik(idZaposlenik)
+  FOREIGN KEY (idZaposlenik) REFERENCES Zaposlenik(idZaposlenik) ON DELETE CASCADE,
 );
 
 CREATE TABLE Placanje
@@ -148,7 +148,7 @@ CREATE TABLE Placanje
   iznos FLOAT NOT NULL,
   idDijete INT NOT NULL,
   PRIMARY KEY (idPlacanje),
-  FOREIGN KEY (idDijete) REFERENCES Dijete(idDijete)
+  FOREIGN KEY (idDijete) REFERENCES Dijete(idDijete) ON DELETE CASCADE,
 );
 
 CREATE TABLE Voditelj
@@ -174,5 +174,5 @@ CREATE TABLE DijeteBolest
   idBolest INT NOT NULL,
   PRIMARY KEY (idDijete, idBolest),
   FOREIGN KEY (idDijete) REFERENCES Dijete(idDijete) ON DELETE CASCADE,
-  FOREIGN KEY (idBolest) REFERENCES Bolest(idBolest)
+  FOREIGN KEY (idBolest) REFERENCES Bolest(idBolest) ON DELETE CASCADE,
 );
