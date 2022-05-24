@@ -9,6 +9,8 @@ export class GrupaController {
 
   @Post()
   create(@Body() body: CreateGrupaDto) {
+    // eslint-disable-next-line no-console
+    console.log('Grupa create controller');
     return this.grupaService.create(body);
   }
 
@@ -35,5 +37,13 @@ export class GrupaController {
   @Delete(':groupId')
   remove(@Param('groupId') groupId: string) {
     return this.grupaService.remove(+groupId);
+  }
+
+  @Post(':groupId/djeca')
+  addChildren(
+    @Param('groupId') groupId: string,
+    @Query('childrenIds') childrenIds: string
+  ) {
+    return this.grupaService.addChildren(+groupId, childrenIds);
   }
 }

@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DijeteService } from '../dijete/dijete.service';
 import { Dijete } from '../dijete/entities/dijete.entity';
@@ -22,13 +22,39 @@ export class GrupaService {
     private dijeteService: DijeteService
   ) {}
 
-  public async create(grupa: CreateGrupaDto): Promise<Grupa> {
-    const count = await this.grupaRepository.count({ naziv: grupa.naziv });
-    if (count != 0)
-      throw new ConflictException(`Grupa ${grupa.naziv} već postoji u sustavu`);
+  public async addChildren(groupId: number, childrenIds: string) {
+    const children = childrenIds.split(',');
 
+    for (const childId of children) {
+      try {
+        await this.dijeteService.assignGroup(+childId, groupId);
+      } catch (err: unknown) {
+        // eslint-disable-next-line no-console
+        console.log(
+          `Pogreška kod dodavanja djeteta #${childId} u grupu #${groupId}- preskacem...`
+        );
+        // eslint-disable-next-line no-console
+        console.error(err);
+      }
+    }
+
+    return GrupaSerializer.serialize({ idgrupa: groupId });
+  }
+
+  public async create(grupa: CreateGrupaDto): Promise<Grupa> {
+    // eslint-disable-next-line no-console
+    console.log('Grupa create service');
+
+    const count = await this.grupaRepository.count({ naziv: grupa.naziv });
+    if (count != 0) {
+      // eslint-disable-next-line no-console
+      console.log('Error grupa postoji');
+      throw new ConflictException(`Grupa ${grupa.naziv} već postoji u sustavu`);
+    }
     await this.grupaRepository.insert(grupa);
 
+    // eslint-disable-next-line no-console
+    console.log('Returning...');
     return GrupaSerializer.serialize(grupa);
   }
 
@@ -79,6 +105,7 @@ export class GrupaService {
     }
 
     return GrupaSerializer.serialize({
+      idgrupa: group.idgrupa,
       naziv: group.naziv,
       datumosnivanja: group.datumosnivanja,
       djeca: djeca
