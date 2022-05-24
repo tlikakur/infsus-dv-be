@@ -22,6 +22,11 @@ export class DijeteController {
     return this.dijeteService.findOne(+id);
   }
 
+  @Delete(':id/grupa')
+  deleteGroup(@Param('id') id: string) {
+    return this.dijeteService.removeGroup(+id);
+  }
+
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateDijeteDto: UpdateDijeteDto) {
     return this.dijeteService.update(+id, updateDijeteDto);

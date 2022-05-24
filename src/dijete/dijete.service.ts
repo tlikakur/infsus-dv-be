@@ -5,6 +5,7 @@ import { DijeteSerializer } from './dijete.serializer';
 import { CreateDijeteDto } from './dto/createDijete.dto';
 import { UpdateDijeteDto } from './dto/updateDijete.dto';
 import { Dijete } from './entities/dijete.entity';
+import { assignGroup, removeGroup } from './entities/dijete.query';
 
 @Injectable()
 export class DijeteService {
@@ -28,6 +29,15 @@ export class DijeteService {
     children.sort((first, second) => first.iddijete - second.iddijete);
 
     return DijeteSerializer.serialize(children);
+  }
+
+  public async removeGroup(childId: number): Promise<void> {
+    try {
+      // TODO: Fix
+      await this.dijeteRepository.query(removeGroup(childId));
+    } catch (err) {
+      //
+    }
   }
 
   /**
@@ -75,9 +85,7 @@ export class DijeteService {
     if (count == 0) throw new ConflictException(`Dijete #${childId} ne postoji sustavu`);
 
     // TODO: Fix
-    await this.dijeteRepository.query(
-      `UPDATE Dijete SET idGrupa = ${groupId} WHERE idDijete = ${childId}`
-    );
+    await this.dijeteRepository.query(assignGroup(groupId, childId));
 
     return DijeteSerializer.serialize({ iddijete: childId });
   }
