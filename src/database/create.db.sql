@@ -26,7 +26,7 @@ CREATE TABLE Grupa
   idGrupa SERIAL NOT NULL,
   datumOsnivanja DATE NOT NULL,
   naziv VARCHAR(50) NOT NULL,
-  idOdgajatelj INT NOT NULL,
+  idOdgajatelj INT,
   PRIMARY KEY (idGrupa),
   FOREIGN KEY (idOdgajatelj) REFERENCES Odgajatelj(idOdgajatelj),
   UNIQUE(naziv)
@@ -41,7 +41,7 @@ CREATE TABLE Dijete
   datumRodenja DATE NOT NULL CHECK (AGE(now()::DATE, datumRodenja) BETWEEN '0 years' AND '6 years'),
   idGrupa INT NOT NULL,
   PRIMARY KEY (idDijete),
-  FOREIGN KEY (idGrupa) REFERENCES Grupa(idGrupa)
+  FOREIGN KEY (idGrupa) REFERENCES Grupa(idGrupa) ON DELETE SET null
 );
 
 CREATE TABLE Smjena
