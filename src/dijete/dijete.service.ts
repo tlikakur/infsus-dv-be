@@ -1,15 +1,42 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { BolestService } from '../bolest/bolest.service';
 import { Repository } from 'typeorm';
 import { DijeteSerializer } from './dijete.serializer';
 import { CreateDijeteDto } from './dto/createDijete.dto';
 import { UpdateDijeteDto } from './dto/updateDijete.dto';
 import { Dijete } from './entities/dijete.entity';
 import { assignGroup, removeGroup } from './entities/dijete.query';
+import {
+  ConflictException,
+  forwardRef,
+  Inject,
+  Injectable,
+  NotFoundException
+} from '@nestjs/common';
 
 @Injectable()
 export class DijeteService {
-  constructor(@InjectRepository(Dijete) private dijeteRepository: Repository<Dijete>) {}
+  constructor(
+    @InjectRepository(Dijete) private dijeteRepository: Repository<Dijete>,
+    @Inject(forwardRef(() => BolestService)) private bolestService: BolestService
+  ) {}
+
+  public async addDiseases(childId: number, diseaseIds: string) {
+    const diseases = diseaseIds.split(',');
+    for (const diseaseId of diseases) {
+      try {
+        await this.bolestService.assignDiseaseToChild(+diseaseId, childId);
+      } catch (err: unknown) {
+        // eslint-disable-next-line no-console
+        console.log(
+          `Pogreška kod dodavanja bolesti #${diseaseId} djetetu #${childId} - preskacem...`
+        );
+        // eslint-disable-next-line no-console
+        console.error(err);
+      }
+    }
+    return DijeteSerializer.serialize({ iddijete: childId });
+  }
 
   public async create(child: CreateDijeteDto): Promise<CreateDijeteDto> {
     const count = await this.dijeteRepository.count({ oib: child.oib });

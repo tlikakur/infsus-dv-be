@@ -52,4 +52,13 @@ export class DijeteController {
   remove(@Param('id') id: string) {
     return this.dijeteService.remove(+id);
   }
+
+  @Post(':childId/bolesti')
+  @HttpCode(201)
+  addChildren(
+    @Param('childId') childId: string,
+    @Query('diseaseIds') diseaseIds: string
+  ) {
+    return this.dijeteService.addDiseases(+childId, diseaseIds);
+  }
 }

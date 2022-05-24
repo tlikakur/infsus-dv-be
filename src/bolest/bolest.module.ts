@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { BolestService } from './bolest.service';
 import { BolestController } from './bolest.controller';
 import { DijeteModule } from '../dijete/dijete.module';
@@ -8,7 +8,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 @Module({
   controllers: [BolestController],
   providers: [BolestService, Bolest],
-  imports: [DijeteModule, TypeOrmModule.forFeature([Bolest])],
+  imports: [forwardRef(() => DijeteModule), TypeOrmModule.forFeature([Bolest])],
   exports: [Bolest, BolestService]
 })
 export class BolestModule {}

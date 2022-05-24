@@ -1,4 +1,3 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Like, Repository } from 'typeorm';
 import { CreateBolestDto } from './dto/createBolest.dto';
@@ -6,12 +5,20 @@ import { UpdateBolestDto } from './dto/updateBolest.dto';
 import { Bolest } from './entities/bolest.entity';
 import { BolestSerializer } from './bolest.serializer';
 import { DijeteService } from '../dijete/dijete.service';
+import {
+  ConflictException,
+  forwardRef,
+  Inject,
+  Injectable,
+  NotFoundException
+} from '@nestjs/common';
+import { assignDisease } from './entities/bolest.query';
 
 @Injectable()
 export class BolestService {
   constructor(
     @InjectRepository(Bolest) private bolestRepository: Repository<Bolest>,
-    private dijeteService: DijeteService
+    @Inject(forwardRef(() => DijeteService)) private dijeteService: DijeteService
   ) {}
 
   public async create(disease: CreateBolestDto): Promise<Bolest> {
@@ -74,9 +81,7 @@ export class BolestService {
     if (!child) throw new ConflictException(`Dijete #${childId} ne postoji u sustavu`);
 
     // TODO: Fix
-    await this.bolestRepository.query(
-      `INSERT INTO DijeteBolest(idBolest, idDijete) VALUES (${diseaseId}, ${childId});`
-    );
+    await this.bolestRepository.query(assignDisease(diseaseId, childId));
 
     return BolestSerializer.serialize({ idbolest: diseaseId });
   }
